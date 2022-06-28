@@ -1,17 +1,24 @@
-// current issues: alerts seem to keep looping and im not sure why(might not be an issue if i get rid of alerts)
-// button doesnt reset
+// THINGS LEFT TO DO: 
+// 1. reset html and css on function end *all set*
+// 2. display score 
 
+// global DOM variables
 let questionEl = document.getElementById("questionEl");
-let answersEl = document.querySelectorAll('.answer')
-let startEl = document.getElementById('start')
-let inputEl = document.getElementsByName('answer')
+let answersEl = document.querySelectorAll('.answer');
+let startEl = document.getElementById('start');
+let submitEl = document.getElementById('submit');
+let inputEl = document.getElementsByName('answer');
+let clockEl = document.getElementById('clock');
+let finalEl = document.getElementById('final')
 
+// global variables for timer, testArr index, and score
 let time = 60;
-
-
-// Make sure to save these to browser info and add a reset button on home menu
+let index = 0;
 let correct = 0;
 
+
+
+// question sets. If adding more, add another multilayer array as follows: [answer, a1, a2, a3, a4, function to set correct answer]
 let questionArr = [["What data type has a value of true or false?", 'strings', 'booleans', 'integers', 'numbers', function(){
     inputEl[1].setAttribute('value', 'true');
 }], ['What is an object?', 'a collection of strings', 'a for in loop to display data', 'a standalone entity with properties and a type', 'the contents of the whole browser', function(){
@@ -23,60 +30,83 @@ let questionArr = [["What data type has a value of true or false?", 'strings', '
 }]
 ]
 
-function testArr(num) {
-    questionEl.innerHTML = questionArr[num][0];
-    for(i=0;i<questionArr[num].length-2;i++){
-        answersEl[i].innerHTML = questionArr[num][i+1];
+let score = correct / questionArr.length * 100;
+
+
+// start of quiz function
+function testArr() {
+    // switches display to submit button
+    startEl.style.setProperty('left', '10000px');
+    submitEl.style.setProperty('left', '0px');
+    event.preventDefault();
+
+    // displays questions and answers
+    questionEl.innerHTML = questionArr[index][0];
+    for(i=0;i<questionArr[index].length-2;i++){
+        answersEl[i].textContent = questionArr[index][i+1];
         inputEl[i].removeAttribute('value');
-        questionArr[num][5]();
+        questionArr[index][5]();
     }
-    startEl.innerHTML = "submit"
-    startEl.setAttribute('id', 'submit');
-    let submitEl = document.getElementById('submit');
-
-    submitEl.addEventListener('click', function(e){
-        e.preventDefault()
-        
-        
-        console.log(inputEl[0].value)
-        console.log(inputEl[1].value)
-        console.log(inputEl[2].value)
-        console.log(inputEl[3].value)
-        
-        // the for loop here is causing trouble. it loops thru the for loop presenting alerts several times over for each question. could i change it to search through the array inputEl for a particular .value?
-        for(i=0;i<inputEl.length;i++) {
-        if (inputEl[i].checked){
-            if(inputEl[i].value == 'true'){
-                correct += 1;
-                alert('correct!')
-            } else {alert('better luck next time')}
-        }}
-        if(time === 0 || num > questionArr.length) {
-            return alert('thanks for playing! Your score: ' + correct / questionArr.length)
-        } else {testArr(num + 1)}
-
-    })
-    
 };
+// listener for submit- checks for which radio element is checked, then compares it to the true value provided by each questions 5th index
+submitEl.addEventListener('click', function(e){
+    e.preventDefault();
+    if(inputEl[0].checked && inputEl[0].value == 'true') {
+        correct += 1;
+    } else if(inputEl[1].checked && inputEl[1].value == 'true') {
+        correct += 1;
+    } else if(inputEl[2].checked && inputEl[2].value == 'true') {
+        correct += 1;
+    } else if(inputEl[3].checked && inputEl[3].value == 'true') {
+        correct += 1;
+    }
+    else {
+        alert('better luck next time');
+        clockEl.
+        time -= 3;
+    }
+   
+    // has to be += bc index is a global variable
+    if(index < questionArr.length){testArr(index += 1)}   
+})
 
-testArr(0);
+// standard timer function
+function timer(){
+    var timer = setInterval(function(){
+        time--;
+        clock.innerHTML = time + ' seconds remaining';
+        if(time === 0 || index > questionArr.length - 1){
+            clearInterval(timer);
+            reset();
+        }
+    } , 1000)
+}
 
-// Also, just steal the timer funciton we have on the other game
-// function for that argment takes argument of num where num on start = 0
-// that will access an object questionMap[0] where 0 is num
-// takes the object array, loops thru entries (0 is q, 1234 are A)
+// event listeners to run the test and the timer on start click
+startEl.addEventListener('click', testArr);
+startEl.addEventListener('click', timer)
 
+// add reset button below all other html elements and make a function here. itll need to clear our form children elements and set the start button to be present, then ur good! 
+function reset(){
+    time = 60;
+    clockEl.textContent = '';
+    startEl.style.removeProperty('left');
+    submitEl.style.removeProperty('left');
+    alert('thanks for playing! Your score: ' + correct / questionArr.length * 100)
+     console.log('hey there again')
+    index = 0;
+    questionEl.innerHTML = 'Click start to begin';
+    for(i=0;i<questionArr[index].length-2;i++){
+        answersEl[i].textContent = '';
+        inputEl[i].removeAttribute('value');
+    }
+    finalEl.innerHTML = "thanks for playing! Your score: " + score;
+    let name = prompt('Name for high score list?')
+    localStorage.setItem(name, score);
 
+}
 
-// on event listener to start, a function runs with an arg of a function.
-// function says if(selected value in radio == correct answer){
-    // set response = true;
-    // else {response = false}
-    // if(event listener for submit && response == true){
-        // message telling you youre right and +1 to correct reponses
-        // else {+1 to incorrect message telling you wrong}
-    // }
-    // this function(callback(num+1))
-    // means i need to put a top on the overall loop
-// }
-
+// high score code
+let olEl = document.querySelectorAll('ol');
+console.log(olEl[0].children)
+olEl[0].children[0].innerHTML = localStorage.getItem['name']

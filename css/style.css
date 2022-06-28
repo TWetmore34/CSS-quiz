@@ -1,5 +1,3 @@
-
-
 header {
     text-align: center;
     color: white;
@@ -8,4 +6,53 @@ header {
 
 #questionEl {
     display: block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.background {
+    background-color: rgb(84, 181, 194);
+}
+
+#start {
+    /* giving this a display of block means the hidden attribute stops working in JS? */
+    display: block;
+    width: 6em;
+    height: 2em;
+    margin: 0 auto;
+    border-radius: 5px;
+    position: relative;
+}
+
+#submit {
+    /* giving this a display of block means the hidden attribute stops working in JS? */
+    display: block;
+    width: 6em;
+    height: 2em;
+    margin: 0 auto;
+    border-radius: 5px;
+    position: relative;
+    left: 10000px;
+}
+
+#clock {
+    font-size: 30px;
+    text-align: center;
+}
+
+#clock::after {
+    /* is it possible to add pseudo-class styling from the JS? if so, id love a little pop up message telling you how much time youve lost when you miss a question */
+}
+
+.score {
+    text-align: center;
+}
+
+.custom-bg {
+    background-color: tan;
+}
+
+.custom-li {
+    list-style: none;
 }
