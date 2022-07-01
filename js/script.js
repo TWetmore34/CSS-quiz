@@ -1,6 +1,4 @@
 // THINGS LEFT TO DO: 
-// 1. reset html and css on function end *all set*
-// 2. display score 
 
 // global DOM variables
 let questionEl = document.getElementById("questionEl");
@@ -10,11 +8,9 @@ let submitEl = document.getElementById('submit');
 let inputEl = document.getElementsByName('answer');
 let clockEl = document.getElementById('clock');
 let finalEl = document.getElementById('final')
-
-// global variables for timer, testArr index, and score
-let time = 60;
-let index = 0;
-let correct = 0;
+let names = document.getElementById('highScores')
+let scores = document.getElementById('scoreList')
+console.log(answersEl)
 
 
 
@@ -30,16 +26,23 @@ let questionArr = [["What data type has a value of true or false?", 'strings', '
 }]
 ]
 
-let score = correct / questionArr.length * 100;
+// global variables for timer, testArr index, and score
+let time = 60;
+let index = 0;
+let correct = 0;
+
+
 
 
 // start of quiz function
 function testArr() {
+    // resets finalEl
+    finalEl.textContent = ''
+
     // switches display to submit button
     startEl.style.setProperty('left', '10000px');
     submitEl.style.setProperty('left', '0px');
     event.preventDefault();
-
     // displays questions and answers
     questionEl.innerHTML = questionArr[index][0];
     for(i=0;i<questionArr[index].length-2;i++){
@@ -62,8 +65,7 @@ submitEl.addEventListener('click', function(e){
     }
     else {
         alert('better luck next time');
-        clockEl.
-        time -= 3;
+        time -= 10;
     }
    
     // has to be += bc index is a global variable
@@ -88,25 +90,43 @@ startEl.addEventListener('click', timer)
 
 // add reset button below all other html elements and make a function here. itll need to clear our form children elements and set the start button to be present, then ur good! 
 function reset(){
+    // high score checks
+
+    let highscore = JSON.parse(localStorage.getItem('highscores')) || [];
+    let name = prompt('enter a name for high scores');
+    let score = correct / questionArr.length * 100;
+    
+
+    let storeme = {
+        name: name,
+        score: score
+    };
+    
+    highscore.push(storeme);
+    
+    localStorage.setItem('highscores', JSON.stringify(highscore));
+    
+    // display high scores
+    
+    // resets timer and display
     time = 60;
     clockEl.textContent = '';
+
+    // reset button positions
     startEl.style.removeProperty('left');
     submitEl.style.removeProperty('left');
-    alert('thanks for playing! Your score: ' + correct / questionArr.length * 100)
-     console.log('hey there again')
+
+    
+
+    // reset index and Q+A display to prep for next round
     index = 0;
+    correct = 0;
     questionEl.innerHTML = 'Click start to begin';
     for(i=0;i<questionArr[index].length-2;i++){
         answersEl[i].textContent = '';
         inputEl[i].removeAttribute('value');
     }
+    // displays final score
     finalEl.innerHTML = "thanks for playing! Your score: " + score;
-    let name = prompt('Name for high score list?')
-    localStorage.setItem(name, score);
-
 }
 
-// high score code
-let olEl = document.querySelectorAll('ol');
-console.log(olEl[0].children)
-olEl[0].children[0].innerHTML = localStorage.getItem['name']
