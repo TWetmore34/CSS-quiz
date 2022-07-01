@@ -3,7 +3,7 @@ multiple choice css quiz using a timer as the end condition
 
 This short multiple choice quiz begins with a simple ui layout. On pressing the start button, it is replaced with a submit button, and the timer begins. As you move through the quiz, incorrect answers will subtract 3 seconds each (this can be easily modified in the JS file). The quiz ends and requests your name for a high score list. This list takes the information from local storage to update high-score.html with the latest scores. Each new attempt will add a list element with the name and score value displayed. Currently, these values do not sort themselves.
 
-## Code maintenance 
+## Code outline 
 
 The code in the JS file is broken into a feew major section. First, the dom elements are listed out. This guarantees these variables will be accessable anywhere they are needed in the file. 
 
